@@ -4,7 +4,7 @@ export type Theme = "light" | "dark";
 
 type ThemeContextType = [
   theme: Theme,
-  setTheme: Dispatch<SetStateAction<Theme>>
+  setTheme: Dispatch<SetStateAction<Theme>> | null
 ];
 
-export const ThemeContext = createContext<ThemeContextType>(["light", null!]);
+export const ThemeContext = createContext<ThemeContextType>(["light", null]);
