@@ -23,26 +23,30 @@ div {
   position: relative;
 
   width: 100vw;
-  min-height: 100vh;
+  height: 100vh;
 
   background-color: var(--primary-bg);
   color: var(--primary-font);
 
   font-family: Unbounded;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 2% 5%;
+
+  z-index: 2;
 }
 
 .navbar {
   font-size: 20px;
 
-  width: 100%;
-  min-height: 20%;
+  height: 8%;
 
   display: flex;
   flex-direction: row;
 
   color: var(--primary-highlight);
-
-  padding-top: 40px;
 
   & > div {
     // left and right
@@ -52,15 +56,7 @@ div {
 
   &-right {
     width: 50%;
-    justify-content: flex-end;
-
-    & > div {
-      margin-right: 125px;
-    }
-  }
-
-  &-left > div {
-    margin-left: 125px;
+    justify-content: space-evenly;
   }
 }
 
@@ -78,4 +74,77 @@ div {
   background-color: var(--primary-font);
 
   box-shadow: -1px 1px 16px 2px var(--shadow-color);
+
+  z-index: 1;
+}
+
+.theme-button:active {
+  width: 300vw;
+  height: 300vh;
+}
+
+.intro {
+  height: 92%;
+
+  display: flex;
+
+  border-left: 1px solid var(--primary-font);
+
+  &-left {
+    width: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &-wrapper {
+      width: 50%;
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+
+      padding-top: 5%;
+    }
+  }
+
+  &-right {
+    width: 50%;
+  }
+}
+
+.hello-world {
+  font-size: 42px;
+}
+
+.intro-bio {
+  font-size: 28px;
+  margin-top: 25px;
+}
+
+.big-ball {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.write-animation-text {
+  height: 100%;
+  &-caret {
+    margin-left: 5px;
+
+    animation: blink-animation 1s steps(5, start) infinite;
+    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+
+    @keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+    @-webkit-keyframes blink-animation {
+      to {
+        visibility: hidden;
+      }
+    }
+  }
 }
