@@ -19,47 +19,6 @@ div {
   transition-timing-function: ease-out;
 }
 
-.container {
-  position: relative;
-
-  width: 100vw;
-  height: 100vh;
-
-  background-color: var(--primary-bg);
-  color: var(--primary-font);
-
-  font-family: Unbounded;
-
-  display: flex;
-  flex-direction: column;
-
-  padding: 2% 5%;
-
-  z-index: 2;
-}
-
-.navbar {
-  font-size: 20px;
-
-  height: 8%;
-
-  display: flex;
-  flex-direction: row;
-
-  color: var(--primary-highlight);
-
-  & > div {
-    // left and right
-    display: flex;
-    width: 100%;
-  }
-
-  &-right {
-    width: 50%;
-    justify-content: space-evenly;
-  }
-}
-
 .theme-button {
   width: 45px;
   height: 45px;
@@ -83,36 +42,6 @@ div {
   height: 300vh;
 }
 
-.intro {
-  height: 92%;
-
-  display: flex;
-
-  border-left: 1px solid var(--primary-font);
-
-  &-left {
-    width: 50%;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &-wrapper {
-      width: 50%;
-      height: 50%;
-      display: flex;
-      flex-direction: column;
-      justify-content: start;
-
-      padding-top: 5%;
-    }
-  }
-
-  &-right {
-    width: 50%;
-  }
-}
-
 .hello-world {
   font-size: 42px;
 }
@@ -123,28 +52,96 @@ div {
 }
 
 .big-ball {
-  width: 100px;
-  height: 100px;
+  width: 70%;
+  aspect-ratio: 1/1;
   border-radius: 50%;
+  background-color: salmon;
 }
 
-.write-animation-text {
-  height: 100%;
-  &-caret {
-    margin-left: 5px;
+.container {
+  position: fixed;
 
-    animation: blink-animation 1s steps(5, start) infinite;
-    -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  width: 100vw;
+  height: 100vh;
 
-    @keyframes blink-animation {
-      to {
-        visibility: hidden;
-      }
-    }
-    @-webkit-keyframes blink-animation {
-      to {
-        visibility: hidden;
-      }
-    }
+  background-color: var(--primary-bg);
+  color: var(--primary-font);
+
+  font-family: Unbounded;
+
+  z-index: 2;
+
+  overflow: scroll;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+/* Chrome, Safari and Opera */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.navbar {
+  font-size: 20px;
+  color: var(--primary-highlight);
+
+  position: fixed;
+  width: 100%;
+
+  display: flex;
+  height: 10vh;
+
+  padding: 0px 120px;
+
+  background-color: var(--primary-bg);
+
+  & > div {
+    // left and right
+    padding-top: 35px;
+    width: 100%;
   }
+
+  &-right {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
+    margin-left: 25%;
+  }
+  z-index: 2;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro {
+  height: 100vh;
+
+  display: flex;
+
+  padding-left: 120px;
+
+  & > div {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-left-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-left: 2px solid var(--primary-font);
+    padding: 15% 10%;
+  }
+}
+
+.projects,
+.about,
+.contact {
+  padding-top: 10vh;
+  height: 100vh;
 }

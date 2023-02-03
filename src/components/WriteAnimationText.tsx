@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
+import styles from "@/styles/components/writeAnimationText.module.scss";
 type WriteAnimationTextProps = {
   values: string[];
 };
@@ -39,9 +40,9 @@ const WriteAnimationDynamicText: FC<WriteAnimationTextProps> = ({ values }) => {
 
 const WriteAnimationText: FC<WriteAnimationTextProps> = ({ values }) => {
   return (
-    <div className="write-animation-text">
+    <div className={styles["write-animation-text"]}>
       <WriteAnimationDynamicText values={values} />
-      <span className="write-animation-text-caret">|</span>
+      <span className={styles["write-animation-text-caret"]}>|</span>
     </div>
   );
 };
