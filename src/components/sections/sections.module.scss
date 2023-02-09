@@ -1,0 +1,157 @@
+.projects {
+  padding: 0px 125px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 5%;
+  grid-template-areas:
+    "project-1 project-1 project-1 project-1"
+    "project-2 project-2 project-4 project-4"
+    "project-3 project-3 project-4 project-4";
+
+  min-height: 90vh;
+
+  padding-bottom: 10px;
+  padding-top: 15px;
+}
+
+.projectItem {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border-radius: 0px;
+  transition: 0.7s;
+  box-shadow: 0px 0px 4px 1px var(--shadow-color);
+
+  cursor: pointer;
+
+  &Details {
+    width: 100%;
+    height: 100%;
+    background-color: #000000dd;
+    padding: 2%;
+    opacity: 0;
+    display: flex;
+    justify-content: space-between;
+
+    &:hover {
+      border-radius: 13px;
+    }
+  }
+
+  &:hover {
+    border: none;
+    box-shadow: none;
+    border-radius: 13px;
+    box-shadow: 0px 0px 16px 2px var(--shadow-color);
+  }
+
+  &Content {
+    width: 50%;
+  }
+
+  &Links {
+    color: var(--primary-highlight);
+    display: flex;
+    flex-direction: column;
+    & > a {
+      color: var(--primary-highlight);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.show {
+  opacity: 1;
+}
+
+.project-1 {
+  grid-area: project-1;
+  background-image: url("/boid.png");
+  &:hover {
+    background-image: url("/boid.gif");
+  }
+}
+.project-2 {
+  grid-area: project-2;
+  background-image: url("/vieu.png");
+  &:hover {
+    background-image: url("https://user-images.githubusercontent.com/42416647/103297603-a5703280-4a1e-11eb-9968-abd6ffc8e534.gif");
+  }
+}
+.project-3 {
+  grid-area: project-3;
+  background-image: url("/conway.png");
+  &:hover {
+    background-image: url("/conway.gif");
+  }
+}
+.project-4 {
+  grid-area: project-4;
+  background-image: url("/graphene.png");
+  &:hover {
+    background-image: url("/graphene.gif");
+  }
+}
+.sections {
+  display: flex;
+  flex-direction: column;
+}
+
+.sections-wrapper {
+  position: absolute;
+  top: 10vh;
+  height: 90vh;
+  width: 100vw;
+
+  overflow: scroll;
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.sections-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.about,
+.contact {
+  height: 90vh;
+}
+.intro {
+  position: relative;
+  top: -10vh;
+
+  height: 100vh;
+
+  display: flex;
+
+  padding-left: 120px;
+
+  & > div {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-left-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-left: 2px solid var(--primary-font);
+    padding: 15% 10%;
+  }
+}
+
+.intro-bio {
+  font-size: 28px;
+  margin-top: 25px;
+}
+.hello-world {
+  font-size: 42px;
+}
