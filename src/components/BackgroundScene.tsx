@@ -31,10 +31,9 @@ import {
   PointLightHelper,
   Vector3,
 } from "three";
-import { Theme, ThemeContext } from "@/context/AppContexts";
-import { useControls } from "leva";
+import { Theme, themeContext } from "@/context/AppContexts";
 import Stars from "./Stars";
-import Boids from "./Boids";
+import Boids from "./boids/Boids";
 
 const BackgroundScene = ({
   parentRef,
@@ -58,39 +57,31 @@ const BackgroundScene = ({
 const Scene = () => {
   const light = useRef(null);
 
-  useHelper(
-    light as unknown as MutableRefObject<THREE.Object3D<Event>>,
-    DirectionalLightHelper
-  );
+  // useHelper(
+  //   light as unknown as MutableRefObject<THREE.Object3D<Event>>,
+  //   DirectionalLightHelper
+  // );
 
-  const [theme, _] = useContext(ThemeContext);
+  const [theme, _] = useContext(themeContext);
 
   console.log(theme);
 
+  // lights not need if using basic material
+
   return (
     <>
-      <ambientLight intensity={0.1} />
+      <ambientLight intensity={0.5} />
       <OrbitControls enableZoom={false} />
-      {/* <axesHelper />
-      <OrbitControls enableZoom={true} />
-     
-      <directionalLight ref={light} position={[0, 1, 0.6]} castShadow />
-
-      <mesh castShadow receiveShadow>
-        <boxGeometry args={[0.5, 0.4, 0.5]} />
-        <meshStandardMaterial side={THREE.DoubleSide} />
-      </mesh>
-      <mesh
-        position={[0, -0.5, 0]}
-        rotation-x={Math.PI * 0.5}
+      {/* <axesHelper /> */}
+      {/* <directionalLight
+        ref={light}
+        position={[-2, 0, 0]}
+        intensity={1}
+        scale={3}
         castShadow
-        receiveShadow
-      >
-        <planeGeometry args={[1, 1, 1, 16]} />
-        <meshStandardMaterial side={THREE.DoubleSide} />
-      </mesh>
+      /> */}
       <Boids />
-      <Stats /> */}
+      {/* <Stats /> */}
       <Stars color={theme === "dark" ? "#faf8ff" : "#00754b"} />
     </>
   );

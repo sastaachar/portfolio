@@ -7,11 +7,10 @@ import { projectData } from "./data";
 
 const ProjectSection: SectionFC = ({ sectionRef }) => {
   // styles
-  const projectStyle = styles["projects"];
   const data = projectData;
 
   return (
-    <div className={projectStyle} ref={sectionRef}>
+    <div className={styles.projects} ref={sectionRef}>
       {data.projects.map((item) => (
         <ProjectItem
           classId={item.id}
@@ -45,7 +44,7 @@ const ProjectItem: FC<ProjectItemProps> = ({
 
   const projectItemClass = joined(
     styles.projectItemDetails,
-    visible ? styles["show"] : ""
+    visible ? styles.show : ""
   );
 
   return (
@@ -53,17 +52,19 @@ const ProjectItem: FC<ProjectItemProps> = ({
       className={getProjectItemClassName(classId)}
       onClick={() => setVisible(!visible)}
     >
-      <div className={projectItemClass}>
-        <div className={styles.projectItemContent}>{content}</div>
-        <div className={styles.projectItemLinks}>
-          <a href={projectLink} onClick={(e) => e.stopPropagation()}>
-            site
-          </a>
-          <a href={githubLink} onClick={(e) => e.stopPropagation()}>
-            github
-          </a>
+      {visible && (
+        <div className={projectItemClass}>
+          <div className={styles.projectItemContent}>{content}</div>
+          <div className={styles.projectItemLinks}>
+            <a href={projectLink} onClick={(e) => e.stopPropagation()}>
+              site
+            </a>
+            <a href={githubLink} onClick={(e) => e.stopPropagation()}>
+              github
+            </a>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

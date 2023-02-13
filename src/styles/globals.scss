@@ -5,12 +5,17 @@
   --primary-font: #faf8ff;
   --primary-highlight: #8685ef;
   --shadow-color: rgba(255, 255, 255, 0.3);
+  --transparentBg: #1a1a1add;
+
+  // constant
+  --paddingLeft: 120px;
 }
 
 [data-theme="light"] {
   --primary-bg: #faf8ff;
   --primary-font: #1a1a1a;
-  --primary-highlight: #00754b;
+  --primary-highlight: #00a97f;
+  --transparentBg: #faf8ffdd;
   --shadow-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -70,4 +75,10 @@ div {
 .three-canvas {
   height: 100vh;
   background-color: var(--primary-bg);
+}
+
+@media screen and (max-width: 600px) {
+  :root {
+    --paddingLeft: 40px;
+  }
 }

@@ -25,8 +25,11 @@ export const getUnitVector = (vector: THREE.Vector3): THREE.Vector3 => {
 
   return new THREE.Vector3(vector.x / a, vector.y / a, vector.z / a);
 };
-const getUnprojectedCords = (base: THREE.Vector2, camera: THREE.Camera) => {
-  return new THREE.Vector3(base.x, base.y, 0).unproject(camera);
+export const getUnprojectedCords = (
+  base: THREE.Vector2,
+  camera: THREE.Camera
+) => {
+  return new THREE.Vector3(base.x, base.y, 0.5).unproject(camera);
 };
 
 export type UtilsRange = {

@@ -1,55 +1,79 @@
 import { DivRef } from "@/constants";
-import { Section } from "@/context/AppContexts";
-import { Dispatch, FC, SetStateAction, useRef } from "react";
+import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
 import ProjectSection from "./ProjectSection";
 import WriteAnimationText from "../WriteAnimationText";
 
 import styles from "./sections.module.scss";
+import Navbar from "../navbar/Navbar";
 
-type SectionsProps = {
-  introRef: DivRef;
-  aboutRef: DivRef;
-  projectRef: DivRef;
-  contactRef: DivRef;
-  setSection: Dispatch<SetStateAction<Section>>;
-};
-
-const getScrolledSection = (scroll: number): Section => {
-  if (scroll <= 0.2) {
-    return "intro";
-  } else if (scroll <= 0.45) {
-    return "project";
-  } else if (scroll <= 0.7) {
-    return "about";
-  }
-  return "contact";
-};
-const Sections = ({
-  introRef,
-  projectRef,
-  contactRef,
-  aboutRef,
-  setSection,
-}: SectionsProps) => {
+const Sections = () => {
   const ref = useRef<HTMLDivElement>(null);
 
+  const [section, setSection] = useState<Section>("intro");
+
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const projectRef = useRef<HTMLDivElement>(null);
+  const contactRef = useRef<HTMLDivElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+
+  const getScrolledSection = (): Section => {
+    if (
+      !projectRef.current ||
+      !ref.current ||
+      !aboutRef.current ||
+      !contactRef.current ||
+      !introRef.current
+    )
+      return "intro";
+
+    const curScrollHeight = ref.current.scrollTop;
+
+    // offset for the empty space at the end of intro section
+    const offset = 150;
+
+    const projectHeight = introRef.current.clientHeight - offset;
+    const aboutHeight = projectHeight + projectRef.current.clientHeight;
+    const contactHeight = aboutHeight + aboutRef.current.clientHeight;
+
+    if (curScrollHeight <= projectHeight) return "intro";
+    else if (curScrollHeight <= aboutHeight) return "projects";
+    else if (curScrollHeight <= contactHeight) return "about";
+    return "contact";
+  };
+
   return (
-    <div
-      className={styles["sections-wrapper"]}
-      onScroll={() => {
-        if (!ref.current || !setSection) return;
-        const scroll = ref.current.scrollTop / ref.current.scrollHeight;
-        setSection(getScrolledSection(scroll));
-      }}
-      ref={ref}
-    >
-      <div className={styles["sections"]}>
-        <IntroSection sectionRef={introRef} />
-        <ProjectSection sectionRef={projectRef} />
-        <AboutSection sectionRef={aboutRef} />
-        <div className={styles["contact"]} ref={contactRef}>
-          contact
+    <>
+      {/* navbar section */}
+      <Navbar
+        introRef={introRef}
+        projectRef={projectRef}
+        aboutRef={aboutRef}
+        contactRef={contactRef}
+        section={section}
+      />
+      {/* other sections */}
+      <div
+        className={styles["sections-wrapper"]}
+        onScroll={() => setSection(getScrolledSection())}
+        ref={ref}
+      >
+        <div className={styles.sections}>
+          <IntroSection sectionRef={introRef} />
+          <ProjectSection sectionRef={projectRef} />
+          <AboutSection sectionRef={aboutRef} />
+          <ContactSection sectionRef={contactRef} />
         </div>
+      </div>
+    </>
+  );
+};
+
+const ContactSection: SectionFC = ({ sectionRef }) => {
+  return (
+    <div className={styles.contact} ref={sectionRef}>
+      <div className="mail">
+        <span>Mail</span>
+        <span>justinjohnmathew100@gmail.com</span>
       </div>
     </div>
   );
@@ -60,38 +84,79 @@ type SectionProps = {
 };
 export type SectionFC<T = {}> = FC<SectionProps & T>;
 
-const AboutSection: SectionFC = ({ sectionRef }) => {
+const IntroSection: SectionFC = ({ sectionRef }) => {
+  const dynamicTextList = ["Hello World ! ", "Hola amigo ! ", "12321 "];
   return (
-    <div className="about" ref={sectionRef}>
-      <span>Experience</span>
-      <div className="job">
-        <div className="job-item">
-          <span className="company">Amazon</span>
-          <span className="title">SDE</span>
-          <span className="desc">awdawdd</span>
+    <div className={styles.intro} ref={sectionRef}>
+      <div className={styles.introLeft}>
+        <div className={styles.introLeftWrapper}>
+          <div className={styles.helloWorld}>
+            <WriteAnimationText values={dynamicTextList} />
+          </div>
+          <div className={styles.introBio}>
+            My name is Justin Mathew i am a Software developer based out of
+            India
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-const IntroSection: SectionFC = ({ sectionRef }) => {
-  const dynamicTextList = ["Hello World ! ", "Hola amigo ! ", "12321 "];
+type JobData = {
+  company: string;
+  title: string;
+  desc: string;
+  startDate: { month: string; year: number };
+  present: boolean;
+  endDate?: { month: string; year: number };
+};
+
+const data: JobData[] = [
+  {
+    company: "Amazon",
+    title: "SDE",
+    desc: "Developed Micro services for modeling and transformation of big data using spark and scala.",
+    startDate: { month: "Oct", year: 2022 },
+    present: true,
+  },
+  {
+    company: "Tata Consultancy Services",
+    title: "Systems Engineer",
+    desc: "Developed custom tools using CSOM in C# for sharepoint migration and custom Powerapps for clients.",
+    startDate: { month: "Sep", year: 2022 },
+    present: false,
+    endDate: { month: "May", year: 2021 },
+  },
+  {
+    company: "Karunya University",
+    title: "Student",
+    desc: "Survived on cup noodles while learning a bit about computer science engineering.",
+    startDate: { month: "Sep", year: 2022 },
+    present: false,
+    endDate: { month: "May", year: 2021 },
+  },
+];
+
+const AboutSection: SectionFC = ({ sectionRef }) => {
   return (
-    <div className={styles["intro"]} ref={sectionRef}>
-      <div className={styles["intro-left"]}>
-        <div className={styles["intro-left-wrapper"]}>
-          <div className={styles["hello-world"]}>
-            <WriteAnimationText values={dynamicTextList} />
-          </div>
-          <div className={styles["intro-bio"]}>
-            My name is Justin Mathew i am a Software developer based out of
-            India
-          </div>
-        </div>
+    <div className={styles.about} ref={sectionRef}>
+      <div className={styles.aboutHeading}>
+        <span>Experience</span>
       </div>
-      <div className={styles["intro-right"]} />
+
+      <div className={styles.job}>
+        {data.map((item) => (
+          <div className={styles.jobItem} key={item.company}>
+            <span className={styles.company}>{item.company}</span>
+            <span className={styles.title}>{item.title}</span>
+            <span className={styles.desc}>{item.desc}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
+
+export type Section = "projects" | "about" | "contact" | "intro";
 export default Sections;
