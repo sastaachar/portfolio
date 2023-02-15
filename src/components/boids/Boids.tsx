@@ -34,12 +34,16 @@ const Boids = () => {
   const { width, height } = useWidthHeight(0);
   // console.log({ width, height });
 
-  const bd = {
+  const spawnPositionRange = {
     x: { min: 0, max: width / 2 },
     y: { min: -height / 2, max: height / 2 },
     z: { min: -4, max: 0 },
-  } as const;
-
+  };
+  const borderPositionRange = {
+    x: { min: -width / 2, max: width / 2 },
+    y: { min: -height / 2, max: height / 2 },
+    z: { min: -4, max: 0 },
+  };
   const r = 1;
 
   const velocityRange = { min: -1, max: 1 };
@@ -88,7 +92,8 @@ const Boids = () => {
         return (
           <Boid
             key={index}
-            spawnPositionRange={bd}
+            spawnPositionRange={spawnPositionRange}
+            borderPositionRange={borderPositionRange}
             properties={boidProperty}
             allBoids={boidsRef.current}
             pointerState={pointerStateRef.current}

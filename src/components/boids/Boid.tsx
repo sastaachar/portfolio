@@ -8,24 +8,31 @@ import { FC, RefObject, useRef } from "react";
 import { Vector3 } from "three";
 import * as THREE from "three";
 
-const alignmentCoef = 0.5;
-const sqRadiusOfVison = 4;
+const alignmentCoef = 0.01;
+const sqRadiusOfVision = 1;
 const separationCoef = 0.01;
 const cohesionCoef = 0.01;
 
 const getMid = (range: UtilsRange) => (range.max + range.min) / 2;
 const getDif = (range: UtilsRange) => range.max - range.min;
-const Boid: FC<BoidProps> = ({ spawnPositionRange, properties, allBoids }) => {
+
+const Boid: FC<BoidProps> = ({
+  spawnPositionRange,
+  borderPositionRange,
+  properties,
+  allBoids,
+}) => {
   const position = getRandomVector3(
     spawnPositionRange.x,
     spawnPositionRange.y,
     spawnPositionRange.z
   );
 
-  const boundaries = spawnPositionRange;
+  const boundaries = borderPositionRange;
 
   const velocity = properties.velocity;
 
+  // set ref
   properties.meshRef =
     useRef<THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>>(null);
 
@@ -36,17 +43,16 @@ const Boid: FC<BoidProps> = ({ spawnPositionRange, properties, allBoids }) => {
 
     const mesh = properties.meshRef.current;
 
-    // updateVelocityUsingBoidLogic(mesh, velocity, allBoids, properties.index);
+    updateVelocityUsingBoidLogic(mesh, velocity, allBoids, properties.index);
+    // capSpeed(velocity);
+    updateBoidMovement(mesh, spawnPositionRange, boundaries, velocity, delta);
 
-    updateBoidMovement(mesh, boundaries, velocity, delta);
+    const direction = velocity.clone().normalize();
 
-    // const direction = velocity.clone().normalize();
-    // const r = Math.floor(127.5 * (1 + direction.x)),
-    //   g = Math.floor(127.5 * (1 + direction.y)),
-    //   b = Math.floor(127.5 * (1 + direction.z));
-    // mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
+    updateColor(direction, mesh);
 
-    // mesh.quaternion.setFromUnitVectors(mesh.up, direction);
+    // update direction
+    mesh.quaternion.setFromUnitVectors(mesh.up, direction);
   });
 
   return (
@@ -61,9 +67,24 @@ const Boid: FC<BoidProps> = ({ spawnPositionRange, properties, allBoids }) => {
       }}
     >
       <meshBasicMaterial color={"#8685ef"} />
-      <sphereGeometry args={[0.1]} />
+      <coneGeometry args={[0.05, 0.3]} />
     </mesh>
   );
+};
+const updateColor = (
+  direction: Vector3,
+  mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+) => {
+  const r = Math.floor(127.5 * (1 + direction.x)),
+    g = Math.floor(127.5 * (1 + direction.y)),
+    b = Math.floor(127.5 * (1 + direction.z));
+  mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
+};
+
+const capSpeed = (velocity: THREE.Vector3) => {
+  if (Math.abs(velocity.x) > 1) velocity.setX(velocity.x / velocity.x);
+  if (Math.abs(velocity.y) > 1) velocity.setY(velocity.y / velocity.y);
+  if (Math.abs(velocity.z) > 1) velocity.setZ(velocity.z / velocity.z);
 };
 
 const updateVelocityUsingBoidLogic = (
@@ -75,8 +96,6 @@ const updateVelocityUsingBoidLogic = (
   addCohesionForce(mesh, allBoids, index, velocity);
   addSeparationForce(mesh, allBoids, index, velocity);
   addAlignmentForce(mesh, allBoids, index, velocity);
-
-  velocity.multiplyScalar(0.99);
 };
 
 const addAlignmentForce = (
@@ -85,7 +104,7 @@ const addAlignmentForce = (
   index: number,
   velocity: Vector3
 ) => {
-  const alignmentForce = new Vector3();
+  var alignmentForce = new Vector3();
   for (var i = 0; i < allBoids.length; i++) {
     const boid = allBoids[i];
     if (index === boid.index) continue;
@@ -94,13 +113,13 @@ const addAlignmentForce = (
     const boidMesh = boid.meshRef.current;
 
     const sqDist = mesh.position.distanceToSquared(boidMesh.position);
-    if (sqDist > 1) continue;
 
-    alignmentForce.add(velocity);
+    if (sqDist > sqRadiusOfVision) continue;
+
+    alignmentForce.add(boid.velocity);
   }
 
-  alignmentForce.multiplyScalar(0.001);
-  velocity.add(alignmentForce);
+  velocity.add(alignmentForce.multiplyScalar(0.0001));
 };
 const addSeparationForce = (
   mesh: THREE.Mesh,
@@ -117,10 +136,11 @@ const addSeparationForce = (
     const boidMesh = boid.meshRef.current;
 
     const sqDist = mesh.position.distanceToSquared(boidMesh.position);
-    if (sqDist > 1 && sqDist < 0.5) continue;
 
-    const reuplsionForce = mesh.position.clone().sub(boidMesh.position);
-    separationForce.add(reuplsionForce.multiplyScalar(0.01));
+    if (sqDist > sqRadiusOfVision / 4) continue;
+
+    const repulsionForce = mesh.position.clone().sub(boidMesh.position);
+    separationForce.add(repulsionForce.multiplyScalar(0.01));
   }
 
   velocity.add(separationForce);
@@ -132,6 +152,7 @@ const addCohesionForce = (
   velocity: Vector3
 ) => {
   const centerOfGroup = mesh.position.clone();
+  var count = 1;
   for (var i = 0; i < allBoids.length; i++) {
     const boid = allBoids[i];
     if (index === boid.index) continue;
@@ -142,73 +163,23 @@ const addCohesionForce = (
     const sqDist = mesh.position.distanceToSquared(boidMesh.position);
     if (sqDist > 1) continue;
 
+    ++count;
     centerOfGroup.add(boid.meshRef.current.position);
   }
 
+  centerOfGroup.multiplyScalar(1 / count);
+
   const directionTowardsCenter = centerOfGroup.sub(mesh.position);
 
-  velocity.add(directionTowardsCenter.multiplyScalar(0.0001));
+  directionTowardsCenter.multiplyScalar(0.1);
 
+  velocity.add(directionTowardsCenter);
   return directionTowardsCenter;
-};
-
-const updateVelocityUsingBoidLogic2 = (
-  mesh: THREE.Mesh,
-  velocity: Vector3,
-  allBoids: BoidProperties[],
-  index: number
-) => {
-  const centerOfGroup = mesh.position.clone();
-
-  const align = new Vector3(0, 0, 0);
-  const sep = new Vector3(0, 0, 0);
-
-  const newVelocity = velocity.clone();
-
-  var countOfNeighbors = 0;
-
-  for (var i = 0; i < allBoids.length; i++) {
-    const boid = allBoids[i];
-
-    if (!boid.meshRef?.current) continue;
-    if (boid.index === index) continue;
-
-    const sqDist = Math.sqrt(
-      mesh.position.distanceToSquared(boid.meshRef.current.position)
-    );
-
-    if (sqDist > 2) continue;
-
-    if (sqDist > 0.5 && sqDist < 1) {
-      centerOfGroup.add(boid.meshRef.current.position);
-      ++countOfNeighbors;
-    }
-
-    if (sqDist > 0.5 && sqDist < 1) {
-      const force = boid.velocity.clone().multiplyScalar(0.00001 / sqDist);
-      newVelocity.add(force);
-    }
-
-    if (sqDist > 0.5) {
-      const force = boid.meshRef.current.position
-        .clone()
-        .sub(mesh.position)
-        .multiplyScalar(0.0001 / sqDist);
-      newVelocity.add(force);
-    }
-  }
-
-  centerOfGroup.multiplyScalar(1 / (1 + countOfNeighbors));
-  const directionToCenter = centerOfGroup.sub(mesh.position);
-  const cohesionForce = directionToCenter
-    .clone()
-    .normalize()
-    .multiplyScalar(0.05);
-  newVelocity.add(cohesionForce);
 };
 
 const updateBoidMovement = (
   mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>,
+  spawnRange: Vector3Range,
   boundaries: Vector3Range,
   velocity: Vector3,
   delta: number
@@ -218,7 +189,7 @@ const updateBoidMovement = (
   const distance = velocity.clone().multiplyScalar(delta);
   mesh.position.add(distance);
 
-  handleOutOfBorders(mesh, boundaries);
+  handleOutOfBorders(mesh, boundaries, spawnRange);
 };
 
 type Vector3Range = { x: UtilsRange; y: UtilsRange; z: UtilsRange };
@@ -243,17 +214,15 @@ const updateCrossedBoundaryVelocity = (
 
 const handleOutOfBorders = (
   mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>,
-  boundaries: { x: UtilsRange; y: UtilsRange; z: UtilsRange }
+  boundaries: Vector3Range,
+  spawnRange: Vector3Range
 ) => {
   if (!isBetween(mesh.position.x, boundaries.x))
-    // mesh.material.color.setRGB(1, 0, 0),
-    mesh.position.setX(getMid(boundaries.x));
+    mesh.position.setX(getMid(spawnRange.x));
   if (!isBetween(mesh.position.y, boundaries.y))
-    // mesh.material.color.setRGB(1, 0, 0),
-    mesh.position.setY(getMid(boundaries.y));
+    mesh.position.setY(getMid(spawnRange.y));
   if (!isBetween(mesh.position.z, boundaries.z))
-    // mesh.material.color.setRGB(1, 0, 0),
-    mesh.position.setZ(getMid(boundaries.z));
+    mesh.position.setZ(getMid(spawnRange.z));
 };
 
 export type PointerState = {
@@ -261,7 +230,8 @@ export type PointerState = {
   pointerDirection: { left: number; right: number };
 };
 export type BoidProps = {
-  spawnPositionRange: { x: UtilsRange; y: UtilsRange; z: UtilsRange };
+  spawnPositionRange: Vector3Range;
+  borderPositionRange: Vector3Range;
   properties: BoidProperties;
   allBoids: BoidProperties[];
   pointerState: PointerState;

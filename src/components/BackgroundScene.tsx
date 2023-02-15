@@ -80,7 +80,7 @@ const Scene = () => {
         scale={3}
         castShadow
       /> */}
-      {/* <Boids /> */}
+      <Boids />
       {/* <Stats /> */}
       <Stars color={theme === "dark" ? "#faf8ff" : "#00754b"} />
     </>

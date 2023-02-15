@@ -174,6 +174,7 @@ const ContactSection: SectionFC = ({ sectionRef }) => {
       setTimeout(() => setShowPopUp(false), 1000);
     } catch (err) {
       alert(mailId);
+      console.log(err);
     }
   };
   return (
