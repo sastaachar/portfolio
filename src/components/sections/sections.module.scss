@@ -24,12 +24,16 @@
 
   &Details {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
+    height: max-content;
     background-color: var(--transparentBg);
     padding: 2%;
     opacity: 0;
     display: flex;
     justify-content: space-between;
+
+    letter-spacing: 0.8px;
+    word-spacing: 1px;
 
     &:hover {
       border-radius: 13px;
@@ -53,7 +57,6 @@
     flex-direction: column;
     & > a {
       color: var(--primary-highlight);
-      text-decoration: none;
       display: block;
       margin-bottom: 5px;
     }
@@ -152,22 +155,41 @@
 }
 
 .about {
-  display: flex;
-  flex-direction: column;
+  width: 55%;
 
   height: 90vh;
-  width: 50%;
 
-  & > div {
-    display: flex;
-    flex-direction: column;
-  }
+  display: flex;
+  flex-direction: column;
 
   padding: 0px var(--paddingLeft);
   padding-top: 30px;
 
+  letter-spacing: 0.8px;
+  word-spacing: 1px;
+
   & > .aboutHeading {
     font-size: 32px;
+  }
+
+  & .currentStatus {
+    border: 1px solid var(--primary-highlight);
+    border-radius: 13px;
+    padding: 13px;
+    margin-top: 40px;
+
+    & p:first-child {
+      margin-bottom: 10px;
+    }
+
+    & .connect {
+      color: #ff00ff;
+      font-weight: 600;
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
 
@@ -178,37 +200,79 @@
 
   display: flex;
   flex-direction: column;
-
   &Item {
     border-radius: 13px;
-    margin-top: 2%;
+    margin-top: 4%;
 
     display: flex;
     flex-direction: column;
 
-    & > .company {
-      font-size: 26px;
+    & .companyTitle {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      & > span {
+        display: block;
+      }
+    }
+    & .jobCompany {
+      font-size: 28px;
       color: var(--primary-highlight);
     }
-
-    & > .title {
-      color: #8685ef;
-      font-size: 18px;
-      margin-top: 4px;
-    }
-
-    & > .desc {
+    & .jobTitle {
       font-size: 16px;
+      line-height: 20px;
+      color: var(--primary-font);
+      margin-left: 10px;
+    }
+    & .jobDates {
+      margin-top: 5px;
+      font-size: 13px;
+      color: var(--primary-tint);
+      display: flex;
+      & > span {
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+    & .desc {
       margin-top: 10px;
-      word-spacing: 1px;
-      letter-spacing: 1px;
     }
   }
+}
+
+.contact {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-size: 28px;
+  &Container {
+    position: relative;
+    top: -10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    & a {
+      color: var(--primary-font);
+      margin-bottom: 10px;
+      &:hover {
+        color: var(--primary-highlight);
+      }
+    }
+  }
+}
+.popup {
+  color: green;
+  position: absolute;
 }
 
 @media screen and (max-width: 600px) {
   .introLeft {
     width: 100%;
+    & * {
+      font-size: 5vh;
+    }
   }
 
   .projects {
@@ -219,13 +283,23 @@
   }
 
   .projectItem {
+    font-size: 10px;
     margin-top: 20px;
     height: 20vh;
+    overflow: scroll;
   }
   .about {
-    padding: 0px 20px;
-    height: 90vh;
-    width: 100%;
+    height: max-content;
+    padding: 0px var(--paddingLeft);
     min-height: 90vh;
+    width: 100%;
+  }
+
+  .job .companyTitle {
+    flex-direction: column;
+    align-items: flex-start;
+    & .jobTitle {
+      margin: 0px;
+    }
   }
 }

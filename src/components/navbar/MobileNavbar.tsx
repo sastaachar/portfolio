@@ -1,17 +1,9 @@
 import { joined } from "@/utils/commonUtils";
-import { FC, MouseEventHandler, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { Section } from "../sections/Sections";
 import { getTitle, HandleScrollTo } from "./Navbar";
 
 import styles from "./navbar.module.scss";
-
-const HamburgerMenu = ({
-  handleClick,
-}: {
-  handleClick: MouseEventHandler<HTMLDivElement>;
-}) => {
-  return <div className={styles.hamburger} onClick={handleClick} />;
-};
 
 const MobileNavbar: FC<{
   section: Section;
@@ -55,14 +47,21 @@ const MobileNavbar: FC<{
   };
 
   const getNavItemStyle = (s: Section) => {
-    const classes: (string | false)[] = [];
-    if (s === "about") classes.push(styles.navAbout);
-    if (s === "projects") classes.push(styles.navProject);
-    if (s === "contact") classes.push(styles.navContact);
-    classes.push(
-      s === props.section ? styles.navLinkHighlight : styles.navLink
-    );
-    return joined(...classes);
+    let navClass: string = "";
+    switch (s) {
+      case "about":
+        navClass = styles.navAbout;
+        break;
+      case "projects":
+        navClass = styles.navProject;
+        break;
+      case "contact":
+        navClass = styles.navContact;
+        break;
+    }
+    const highlightClass =
+      s === props.section ? styles.navLinkHighlight : styles.navLink;
+    return joined(navClass, highlightClass);
   };
 
   return (

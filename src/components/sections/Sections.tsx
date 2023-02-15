@@ -1,10 +1,12 @@
-import { DivRef } from "@/constants";
-import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
+import { FC, MouseEventHandler, RefObject, useRef, useState } from "react";
 import ProjectSection from "./ProjectSection";
-import WriteAnimationText from "../WriteAnimationText";
+import WriteAnimationText from "../writeAnimationText/WriteAnimationText";
+import Navbar, { HandleScrollTo } from "../navbar/Navbar";
 
 import styles from "./sections.module.scss";
-import Navbar from "../navbar/Navbar";
+import { jobData } from "./data";
+
+type DivRef = RefObject<HTMLDivElement>;
 
 const Sections = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -15,6 +17,24 @@ const Sections = () => {
   const projectRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollTo = (s: Section) => {
+    if (s === section) {
+      scrollTo(introRef);
+      return;
+    }
+    switch (s) {
+      case "about":
+        scrollTo(aboutRef);
+        return;
+      case "projects":
+        scrollTo(projectRef);
+        return;
+      case "contact":
+        scrollTo(contactRef);
+        return;
+    }
+  };
 
   const getScrolledSection = (): Section => {
     if (
@@ -44,13 +64,7 @@ const Sections = () => {
   return (
     <>
       {/* navbar section */}
-      <Navbar
-        introRef={introRef}
-        projectRef={projectRef}
-        aboutRef={aboutRef}
-        contactRef={contactRef}
-        section={section}
-      />
+      <Navbar section={section} handleScrollTo={handleScrollTo} />
       {/* other sections */}
       <div
         className={styles["sections-wrapper"]}
@@ -60,7 +74,7 @@ const Sections = () => {
         <div className={styles.sections}>
           <IntroSection sectionRef={introRef} />
           <ProjectSection sectionRef={projectRef} />
-          <AboutSection sectionRef={aboutRef} />
+          <AboutSection sectionRef={aboutRef} handleScrollTo={handleScrollTo} />
           <ContactSection sectionRef={contactRef} />
         </div>
       </div>
@@ -68,24 +82,16 @@ const Sections = () => {
   );
 };
 
-const ContactSection: SectionFC = ({ sectionRef }) => {
-  return (
-    <div className={styles.contact} ref={sectionRef}>
-      <div className="mail">
-        <span>Mail</span>
-        <span>justinjohnmathew100@gmail.com</span>
-      </div>
-    </div>
-  );
+export const scrollTo = (ref: RefObject<HTMLDivElement>) => {
+  ref.current?.scrollIntoView({ behavior: "smooth" });
 };
-
-type SectionProps = {
-  sectionRef: DivRef;
-};
-export type SectionFC<T = {}> = FC<SectionProps & T>;
-
 const IntroSection: SectionFC = ({ sectionRef }) => {
-  const dynamicTextList = ["Hello World ! ", "Hola amigo ! ", "12321 "];
+  const dynamicTextList = [
+    "Hello World !",
+    "你好，世界",
+    "नमस्ते दुनिया",
+    "¿Qué tal?",
+  ];
   return (
     <div className={styles.intro} ref={sectionRef}>
       <div className={styles.introLeft}>
@@ -95,68 +101,104 @@ const IntroSection: SectionFC = ({ sectionRef }) => {
           </div>
           <div className={styles.introBio}>
             My name is Justin Mathew i am a Software developer based out of
-            India
+            <span className={styles.india}> India</span>
           </div>
         </div>
       </div>
     </div>
   );
 };
+const AboutSection: SectionFC<{ handleScrollTo: HandleScrollTo }> = ({
+  sectionRef,
+  handleScrollTo,
+}) => {
+  const getFormattedDate = ({
+    month,
+    year,
+  }: {
+    month: string;
+    year: number;
+  }) => {
+    return `${month} ${year % 2000}`;
+  };
 
-type JobData = {
-  company: string;
-  title: string;
-  desc: string;
-  startDate: { month: string; year: number };
-  present: boolean;
-  endDate?: { month: string; year: number };
-};
-
-const data: JobData[] = [
-  {
-    company: "Amazon",
-    title: "SDE",
-    desc: "Developed Micro services for modeling and transformation of big data using spark and scala.",
-    startDate: { month: "Oct", year: 2022 },
-    present: true,
-  },
-  {
-    company: "Tata Consultancy Services",
-    title: "Systems Engineer",
-    desc: "Developed custom tools using CSOM in C# for sharepoint migration and custom Powerapps for clients.",
-    startDate: { month: "Sep", year: 2022 },
-    present: false,
-    endDate: { month: "May", year: 2021 },
-  },
-  {
-    company: "Karunya University",
-    title: "Student",
-    desc: "Survived on cup noodles while learning a bit about computer science engineering.",
-    startDate: { month: "Sep", year: 2022 },
-    present: false,
-    endDate: { month: "May", year: 2021 },
-  },
-];
-
-const AboutSection: SectionFC = ({ sectionRef }) => {
   return (
     <div className={styles.about} ref={sectionRef}>
       <div className={styles.aboutHeading}>
         <span>Experience</span>
       </div>
-
       <div className={styles.job}>
-        {data.map((item) => (
+        {jobData.map((item) => (
           <div className={styles.jobItem} key={item.company}>
-            <span className={styles.company}>{item.company}</span>
-            <span className={styles.title}>{item.title}</span>
-            <span className={styles.desc}>{item.desc}</span>
+            <div className={styles.companyTitle}>
+              <span className={styles.jobCompany}>{item.company}</span>
+              <span className={styles.jobTitle}>{item.title}</span>
+            </div>
+            <div className={styles.jobDates}>
+              <span>{getFormattedDate(item.startDate)}</span>
+              <span>-</span>
+              <span>
+                {item.endDate ? getFormattedDate(item.endDate) : "Present"}
+              </span>
+            </div>
+            <div className={styles.desc}>{item.desc}</div>
           </div>
         ))}
+      </div>
+
+      <div className={styles.currentStatus}>
+        <p>
+          I am currently looking for new opportunities , feel free to{" "}
+          <span
+            className={styles.connect}
+            onClick={() => handleScrollTo("contact")}
+          >
+            connect
+          </span>{" "}
+          with me.
+        </p>
+        <p>location : india / remote</p>
+      </div>
+    </div>
+  );
+};
+const ContactSection: SectionFC = ({ sectionRef }) => {
+  const [showPopUp, setShowPopUp] = useState(false);
+
+  const mailId = "justinjohnmathew100@gmail.com";
+
+  const handleMailClick = async () => {
+    try {
+      await navigator.clipboard.writeText(mailId);
+      setShowPopUp(true);
+      setTimeout(() => setShowPopUp(false), 1000);
+    } catch (err) {
+      console.log("Could not copy !");
+    }
+  };
+  return (
+    <div className={styles.contact} ref={sectionRef}>
+      {showPopUp && <div className={styles.popup}>copied !</div>}
+      <div className={styles.contactContainer}>
+        <a
+          href="mailto:justinjohnmathew100@gmail.com"
+          onClick={handleMailClick}
+        >
+          {showPopUp ? "justinjohnmathew100@gmail.com" : "mail"}
+        </a>
+        <a href="https://github.com/sastaachar">github</a>
+        <a href="https://www.linkedin.com/in/justinjmathew/">linkedin</a>
+        <a href="https://drive.google.com/file/d/1x1mpa25RE89OacO8cWuZYrdL05c84W0R/view?usp=share_link">
+          resume
+        </a>
       </div>
     </div>
   );
 };
 
+type SectionProps = {
+  sectionRef: DivRef;
+};
+export type SectionFC<T = {}> = FC<SectionProps & T>;
 export type Section = "projects" | "about" | "contact" | "intro";
 export default Sections;

@@ -61,7 +61,7 @@ const Boid: FC<BoidProps> = ({ spawnPositionRange, properties, allBoids }) => {
       }}
     >
       <meshBasicMaterial color={"#8685ef"} />
-      <sphereGeometry args={[0.05]} />
+      <sphereGeometry args={[0.1]} />
     </mesh>
   );
 };

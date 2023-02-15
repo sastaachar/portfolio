@@ -1,4 +1,3 @@
-import { joined } from "@/utils/commonUtils";
 import { FC } from "react";
 import { Section } from "../sections/Sections";
 import { getTitle, HandleScrollTo } from "./Navbar";
@@ -9,7 +8,6 @@ const DesktopNavbar: FC<{
   handleScrollTo: HandleScrollTo;
 }> = (props) => {
   // styles
-  const navbarLinkStyle = styles.navbarLink;
   const getSectionStyle = (s: Section) =>
     props.section === s ? styles.navLinkHighlight : styles.navLink;
 

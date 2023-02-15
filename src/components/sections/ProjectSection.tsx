@@ -7,11 +7,10 @@ import { projectData } from "./data";
 
 const ProjectSection: SectionFC = ({ sectionRef }) => {
   // styles
-  const data = projectData;
 
   return (
     <div className={styles.projects} ref={sectionRef}>
-      {data.projects.map((item) => (
+      {projectData.map((item) => (
         <ProjectItem
           classId={item.id}
           content={item.content}
