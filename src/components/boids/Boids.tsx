@@ -32,7 +32,7 @@ const Boids = () => {
   const depth = camera.position.z / 2;
 
   const { width, height } = useWidthHeight(0);
-  console.log({ width, height });
+  // console.log({ width, height });
 
   const bd = {
     x: { min: 0, max: width / 2 },
@@ -64,13 +64,10 @@ const Boids = () => {
     if (prev.x > state.pointer.x) {
       pointerState.pointerDirection.left = (prev.x - state.pointer.x) / delta;
       pointerState.pointerDirection.right = 0;
-      console.log(pointerState.pointerDirection);
     }
     if (prev.x < state.pointer.x) {
       pointerState.pointerDirection.right = (state.pointer.x - prev.x) / delta;
       pointerState.pointerDirection.left = 0;
-
-      console.log(pointerState.pointerDirection);
     }
 
     if (prev.x === state.pointer.x) {

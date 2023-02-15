@@ -64,7 +64,7 @@ const Scene = () => {
 
   const [theme, _] = useContext(themeContext);
 
-  console.log(theme);
+  // console.log(theme);
 
   // lights not need if using basic material
 
@@ -80,7 +80,7 @@ const Scene = () => {
         scale={3}
         castShadow
       /> */}
-      <Boids />
+      {/* <Boids /> */}
       {/* <Stats /> */}
       <Stars color={theme === "dark" ? "#faf8ff" : "#00754b"} />
     </>

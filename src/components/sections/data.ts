@@ -37,7 +37,8 @@ export const jobData: Job[] = [
     title: "SDE",
     desc: "Developed Micro services for modeling and transformation of big data using spark and scala.",
     startDate: { month: "oct", year: 2022 },
-    present: true,
+    endDate: { month: "jan", year: 2023 },
+    present: false,
   },
   {
     company: "TCS",

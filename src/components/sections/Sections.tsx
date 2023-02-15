@@ -173,7 +173,7 @@ const ContactSection: SectionFC = ({ sectionRef }) => {
       setShowPopUp(true);
       setTimeout(() => setShowPopUp(false), 1000);
     } catch (err) {
-      console.log("Could not copy !");
+      alert(mailId);
     }
   };
   return (
@@ -188,7 +188,7 @@ const ContactSection: SectionFC = ({ sectionRef }) => {
         </a>
         <a href="https://github.com/sastaachar">github</a>
         <a href="https://www.linkedin.com/in/justinjmathew/">linkedin</a>
-        <a href="https://drive.google.com/file/d/1x1mpa25RE89OacO8cWuZYrdL05c84W0R/view?usp=share_link">
+        <a href="https://drive.google.com/drive/folders/1MQpPUZATqD-lMLN4gi7e8t0Ilgp8jgi0">
           resume
         </a>
       </div>
