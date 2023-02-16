@@ -3,9 +3,11 @@ import {
   getUnprojectedCords,
   UtilsRange,
 } from "@/utils/vectorUtils";
+import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { FC, RefObject, useRef } from "react";
+import { FC, RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
+import { Vector2, Vector3 } from "three";
 import Boid, { BoidProperties } from "./Boid";
 
 const useWidthHeight = (dist: number) => {
@@ -21,18 +23,18 @@ const useWidthHeight = (dist: number) => {
 };
 
 const Boids = () => {
-  const count = 100;
+  const count = 50;
 
   const pointerStateRef = useRef({
     prevPointer: new THREE.Vector2(0, 0),
-    pointerDirection: { left: 0, right: 0 },
+    pointerSpeed: new THREE.Vector2(0, 0),
   });
 
-  const { camera } = useThree() as { camera: THREE.PerspectiveCamera };
-  const depth = camera.position.z / 2;
+  const gyro = useRef({
+    rotation: new Vector3(),
+  });
 
   const { width, height } = useWidthHeight(0);
-  // console.log({ width, height });
 
   const spawnPositionRange = {
     x: { min: 0, max: width / 2 },
@@ -61,33 +63,17 @@ const Boids = () => {
   useFrame((state, delta) => {
     const pointerState = pointerStateRef.current;
 
-    if (!pointerState) return;
+    if (!pointerState || !delta) return;
 
-    var prev = pointerState.prevPointer;
-
-    if (prev.x > state.pointer.x) {
-      pointerState.pointerDirection.left = (prev.x - state.pointer.x) / delta;
-      pointerState.pointerDirection.right = 0;
-    }
-    if (prev.x < state.pointer.x) {
-      pointerState.pointerDirection.right = (state.pointer.x - prev.x) / delta;
-      pointerState.pointerDirection.left = 0;
-    }
-
-    if (prev.x === state.pointer.x) {
-      pointerState.pointerDirection.right = 0;
-      pointerState.pointerDirection.left = 0;
-    }
+    const prev = pointerState.prevPointer;
+    pointerState.pointerSpeed.setX((prev.x - state.pointer.x) / delta);
+    pointerState.pointerSpeed.setY((prev.y - state.pointer.y) / delta);
 
     pointerStateRef.current.prevPointer.copy(state.pointer);
   });
 
   return (
     <>
-      {/* <mesh position={[getMid(bd.x), getMid(bd.x), getMid(bd.x)]}>
-        <meshStandardMaterial wireframe={false} />
-        <boxGeometry args={[getDif(bd.x), getDif(bd.x), getDif(bd.x)]} />
-      </mesh> */}
       {boidsRef.current.map((boidProperty, index) => {
         return (
           <Boid
@@ -105,11 +91,3 @@ const Boids = () => {
 };
 
 export default Boids;
-/*
-a <- b
-(a + b + v - (a * count))* coe
-
-force = a * co + b*co + c*coe
-force = (a + b +c)*coe
-
-*/

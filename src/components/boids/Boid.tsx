@@ -12,6 +12,8 @@ const alignmentCoef = 0.01;
 const sqRadiusOfVision = 1;
 const separationCoef = 0.01;
 const cohesionCoef = 0.01;
+const purple = new Vector3(134, 133, 239);
+const green = new Vector3(0, 169, 127);
 
 const getMid = (range: UtilsRange) => (range.max + range.min) / 2;
 const getDif = (range: UtilsRange) => range.max - range.min;
@@ -21,6 +23,7 @@ const Boid: FC<BoidProps> = ({
   borderPositionRange,
   properties,
   allBoids,
+  pointerState,
 }) => {
   const position = getRandomVector3(
     spawnPositionRange.x,
@@ -43,7 +46,16 @@ const Boid: FC<BoidProps> = ({
 
     const mesh = properties.meshRef.current;
 
-    updateVelocityUsingBoidLogic(mesh, velocity, allBoids, properties.index);
+    // its currently O(3*n)
+    addCohesionForce(mesh, allBoids, properties.index, velocity);
+    addSeparationForce(mesh, allBoids, properties.index, velocity);
+    addAlignmentForce(mesh, allBoids, properties.index, velocity);
+
+    velocity.setX(velocity.x - pointerState.pointerSpeed.x / 50);
+    velocity.setY(velocity.y - pointerState.pointerSpeed.y / 50);
+
+    if (velocity.x > 1 || velocity.y > 1 || velocity.z > 1)
+      velocity.multiplyScalar(0.99);
     // capSpeed(velocity);
     updateBoidMovement(mesh, spawnPositionRange, boundaries, velocity, delta);
 
@@ -75,9 +87,12 @@ const updateColor = (
   direction: Vector3,
   mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
 ) => {
-  const r = Math.floor(127.5 * (1 + direction.x)),
-    g = Math.floor(127.5 * (1 + direction.y)),
-    b = Math.floor(127.5 * (1 + direction.z));
+  if (!direction.x || !direction.y || !direction.z) return;
+  const color = new Vector3();
+  color.lerpVectors(purple, green, (direction.x + direction.y + 2) / 4);
+  const r = Math.floor(color.x);
+  const g = Math.floor(color.y);
+  const b = Math.floor(color.z);
   mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
 };
 
@@ -85,17 +100,6 @@ const capSpeed = (velocity: THREE.Vector3) => {
   if (Math.abs(velocity.x) > 1) velocity.setX(velocity.x / velocity.x);
   if (Math.abs(velocity.y) > 1) velocity.setY(velocity.y / velocity.y);
   if (Math.abs(velocity.z) > 1) velocity.setZ(velocity.z / velocity.z);
-};
-
-const updateVelocityUsingBoidLogic = (
-  mesh: THREE.Mesh,
-  velocity: Vector3,
-  allBoids: BoidProperties[],
-  index: number
-) => {
-  addCohesionForce(mesh, allBoids, index, velocity);
-  addSeparationForce(mesh, allBoids, index, velocity);
-  addAlignmentForce(mesh, allBoids, index, velocity);
 };
 
 const addAlignmentForce = (
@@ -227,7 +231,7 @@ const handleOutOfBorders = (
 
 export type PointerState = {
   prevPointer: THREE.Vector2;
-  pointerDirection: { left: number; right: number };
+  pointerSpeed: THREE.Vector2;
 };
 export type BoidProps = {
   spawnPositionRange: Vector3Range;

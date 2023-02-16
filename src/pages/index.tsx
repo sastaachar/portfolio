@@ -1,9 +1,17 @@
 import Head from "next/head";
-import { MutableRefObject, useContext, useRef, useState } from "react";
+import {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Theme, themeContext } from "@/context/AppContexts";
 import BackgroundScene from "@/components/BackgroundScene";
 import Sections from "@/components/sections/Sections";
-
+interface DeviceOrientationEventiOS extends DeviceOrientationEvent {
+  requestPermission?: () => Promise<"granted" | "denied">;
+}
 export default function Home() {
   const [theme, setTheme] = useState<Theme>("dark");
 
@@ -12,6 +20,37 @@ export default function Home() {
   ) as MutableRefObject<HTMLDivElement>;
 
   console.log("Home renders");
+
+  // useEffect(() => {});
+
+  const test = () => {
+    const requestPermission = (
+      DeviceOrientationEvent as unknown as DeviceOrientationEventiOS
+    ).requestPermission;
+
+    const iOS = typeof requestPermission === "function";
+
+    if (iOS) {
+      requestPermission()
+        .then((response) => {
+          if (response == "granted") {
+            window.addEventListener("devicemotion", (event) => {
+              const acceleration = event.accelerationIncludingGravity;
+              const rotationRate = event.rotationRate;
+              if (
+                !rotationRate?.alpha ||
+                !rotationRate.beta ||
+                !rotationRate.gamma
+              )
+                return;
+              alert("YOU HAVE BEEN HACKED !");
+              // Use the gyroscope data here
+            });
+          }
+        })
+        .catch();
+    }
+  };
 
   return (
     <>
@@ -22,6 +61,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <themeContext.Provider value={[theme, setTheme]}>
+        <button onClick={test}>click me</button>
         <div className="outer-container" data-theme={theme} ref={containerRef}>
           <div className="container">
             <ThemButton />
