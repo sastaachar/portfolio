@@ -23,7 +23,7 @@ const useWidthHeight = (dist: number) => {
 };
 
 const Boids = () => {
-  const count = 200;
+  const count = window.innerWidth > 600 ? 200 : 60;
 
   const pointerStateRef = useRef({
     prevPointer: new THREE.Vector2(0, 0),
