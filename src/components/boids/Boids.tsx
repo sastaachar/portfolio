@@ -5,7 +5,7 @@ import {
 } from "@/utils/vectorUtils";
 import { Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { FC, RefObject, useEffect, useRef } from "react";
+import { FC, MutableRefObject, RefObject, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { Vector2, Vector3 } from "three";
 import Boid, { BoidProperties } from "./Boid";
@@ -23,7 +23,7 @@ const useWidthHeight = (dist: number) => {
 };
 
 const Boids = () => {
-  const count = 50;
+  const count = 200;
 
   const pointerStateRef = useRef({
     prevPointer: new THREE.Vector2(0, 0),
@@ -37,9 +37,9 @@ const Boids = () => {
   const { width, height } = useWidthHeight(0);
 
   const spawnPositionRange = {
-    x: { min: 0, max: width / 2 },
-    y: { min: -height / 2, max: height / 2 },
-    z: { min: -4, max: 0 },
+    x: { min: width / 4, max: width / 4 + 1 },
+    y: { min: 0, max: 1 },
+    z: { min: -1, max: 0 },
   };
   const borderPositionRange = {
     x: { min: -width / 2, max: width / 2 },

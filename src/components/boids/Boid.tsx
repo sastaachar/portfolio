@@ -4,7 +4,7 @@ import {
   UtilsRange,
 } from "@/utils/vectorUtils";
 import { useFrame, useThree } from "@react-three/fiber";
-import { FC, RefObject, useRef } from "react";
+import { FC, MutableRefObject, RefObject, useEffect, useRef } from "react";
 import { Vector3 } from "three";
 import * as THREE from "three";
 
@@ -35,6 +35,8 @@ const Boid: FC<BoidProps> = ({
 
   const velocity = properties.velocity;
 
+  const showColorRef = useRef(false);
+
   // set ref
   properties.meshRef =
     useRef<THREE.Mesh<THREE.BoxGeometry, THREE.MeshBasicMaterial>>(null);
@@ -54,46 +56,57 @@ const Boid: FC<BoidProps> = ({
     velocity.setX(velocity.x - pointerState.pointerSpeed.x / 50);
     velocity.setY(velocity.y - pointerState.pointerSpeed.y / 50);
 
-    if (velocity.x > 1 || velocity.y > 1 || velocity.z > 1)
+    if (velocity.x > 0.5 || velocity.y > 0.5 || velocity.z > 0.5)
       velocity.multiplyScalar(0.99);
     // capSpeed(velocity);
     updateBoidMovement(mesh, spawnPositionRange, boundaries, velocity, delta);
 
     const direction = velocity.clone().normalize();
 
-    updateColor(direction, mesh);
+    updateColor(direction, mesh, showColorRef);
 
     // update direction
     mesh.quaternion.setFromUnitVectors(mesh.up, direction);
   });
 
   return (
-    <mesh
-      position={position}
-      ref={properties.meshRef}
-      onPointerEnter={() => {
-        properties.meshRef?.current?.material.color.setHex(0x00754b);
-        setTimeout(() => {
-          properties.meshRef?.current?.material.color.setHex(0x8685ef);
-        }, 5000);
-      }}
-    >
-      <meshBasicMaterial color={"#8685ef"} />
-      <coneGeometry args={[0.05, 0.3]} />
-    </mesh>
+    <>
+      <mesh
+        position={position}
+        ref={properties.meshRef}
+        onPointerEnter={() => {
+          showColorRef.current = true;
+          setTimeout(() => {
+            showColorRef.current = false;
+          }, 10000);
+        }}
+      >
+        <meshBasicMaterial />
+        <coneGeometry args={[0.03, 0.2]} />
+      </mesh>
+    </>
   );
 };
 const updateColor = (
   direction: Vector3,
-  mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
+  mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>,
+  showColor: MutableRefObject<boolean>
 ) => {
   if (!direction.x || !direction.y || !direction.z) return;
-  const color = new Vector3();
-  color.lerpVectors(purple, green, (direction.x + direction.y + 2) / 4);
-  const r = Math.floor(color.x);
-  const g = Math.floor(color.y);
-  const b = Math.floor(color.z);
-  mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
+
+  if (showColor.current) {
+    const r = Math.floor(127.5 * (1 + direction.x)),
+      g = Math.floor(127.5 * (1 + direction.y)),
+      b = Math.floor(127.5 * (1 + direction.z));
+    mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
+  } else {
+    const color = new Vector3();
+    color.lerpVectors(purple, green, (direction.x + direction.y + 2) / 4);
+    const r = Math.floor(color.x);
+    const g = Math.floor(color.y);
+    const b = Math.floor(color.z);
+    mesh.material.color = new THREE.Color(`rgb(${r}, ${g}, ${b})`);
+  }
 };
 
 const capSpeed = (velocity: THREE.Vector3) => {

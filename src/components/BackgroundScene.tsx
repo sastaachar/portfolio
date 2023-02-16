@@ -70,7 +70,7 @@ const Scene = () => {
 
   return (
     <>
-      <ambientLight intensity={0.5} />
+      {/* <ambientLight intensity={0.5} /> */}
       <OrbitControls enableZoom={false} />
       {/* <axesHelper /> */}
       {/* <directionalLight
@@ -81,7 +81,7 @@ const Scene = () => {
         castShadow
       /> */}
       <Boids />
-      {/* <Stats /> */}
+      <Stats />
       <Stars color={theme === "dark" ? "#faf8ff" : "#00754b"} />
     </>
   );

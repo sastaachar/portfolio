@@ -6,7 +6,7 @@ export const projectData: Project[] = [
     projectLink: "https://sastaachar.github.io/Boids",
     githubLink: "https://github.com/sastaachar/Boids",
     content:
-      "Simulation of boids using Three.js and TypeScript.\nBoids are artificial life entities that simulate the flocking behavior\nof birds. The simulation is built using Three.js in typescript.",
+      "Simulation of boids using Three.js and TypeScript.\nBoids are artificial life entities that simulate the flocking behavior\nof birds. The simulation is built using Three.js in typescript. Background of the current site uses a basic version of the this.",
   },
   {
     id: 2,
