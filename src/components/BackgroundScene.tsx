@@ -81,7 +81,7 @@ const Scene = () => {
         castShadow
       /> */}
       <Boids />
-      <Stats />
+      {/* <Stats /> */}
       <Stars color={theme === "dark" ? "#faf8ff" : "#00754b"} />
     </>
   );

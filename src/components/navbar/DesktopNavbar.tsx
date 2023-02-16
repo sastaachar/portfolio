@@ -25,7 +25,10 @@ const DesktopNavbar: FC<{
     <>
       <div className={styles.navbar}>
         <div className={styles.navbarLeft}>
-          <div className={styles.navLink}>
+          <div
+            className={styles.navLink}
+            onClick={() => props.handleScrollTo("intro")}
+          >
             <span>Justin Mathew</span>
           </div>
         </div>

@@ -27,8 +27,13 @@
 }
 .navLink {
   color: var(--primary-highlight);
+  cursor: pointer;
   &Highlight {
     color: var(--primary-font);
+  }
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 // mobile styles

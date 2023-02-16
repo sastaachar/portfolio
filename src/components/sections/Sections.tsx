@@ -5,6 +5,7 @@ import Navbar, { HandleScrollTo } from "../navbar/Navbar";
 
 import styles from "./sections.module.scss";
 import { jobData } from "./data";
+import { Color } from "lamina";
 
 type DivRef = RefObject<HTMLDivElement>;
 
@@ -32,6 +33,8 @@ const Sections = () => {
         return;
       case "contact":
         scrollTo(contactRef);
+      case "intro":
+        scrollTo(introRef);
         return;
     }
   };
@@ -100,7 +103,12 @@ const IntroSection: SectionFC = ({ sectionRef }) => {
             <WriteAnimationText values={dynamicTextList} />
           </div>
           <div className={styles.introBio}>
-            My name is Justin Mathew i am a Software developer based out of
+            My name is Justin Mathew i am a
+            <span style={{ color: "var(--primary-highlight-opposite)" }}>
+              {" "}
+              software developer{" "}
+            </span>
+            based out of
             <span className={styles.india}> India</span>
           </div>
         </div>
