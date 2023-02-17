@@ -1,11 +1,10 @@
-import { FC, MouseEventHandler, RefObject, useRef, useState } from "react";
+import { FC, RefObject, useRef, useState } from "react";
 import ProjectSection from "./ProjectSection";
 import WriteAnimationText from "../writeAnimationText/WriteAnimationText";
 import Navbar, { HandleScrollTo } from "../navbar/Navbar";
 
 import styles from "./sections.module.scss";
 import { jobData } from "./data";
-import { Color } from "lamina";
 
 type DivRef = RefObject<HTMLDivElement>;
 
@@ -33,6 +32,7 @@ const Sections = () => {
         return;
       case "contact":
         scrollTo(contactRef);
+        return;
       case "intro":
         scrollTo(introRef);
         return;
@@ -195,9 +195,25 @@ const ContactSection: SectionFC = ({ sectionRef }) => {
         >
           {showPopUp ? "justinjohnmathew100@gmail.com" : "mail"}
         </a>
-        <a href="https://github.com/sastaachar">github</a>
-        <a href="https://www.linkedin.com/in/justinjmathew/">linkedin</a>
-        <a href="https://drive.google.com/drive/folders/1MQpPUZATqD-lMLN4gi7e8t0Ilgp8jgi0">
+        <a
+          href="https://github.com/sastaachar"
+          target="_blank"
+          rel="noreferrer"
+        >
+          github
+        </a>
+        <a
+          href="https://www.linkedin.com/in/justinjmathew/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          linkedin
+        </a>
+        <a
+          href="https://drive.google.com/drive/folders/1MQpPUZATqD-lMLN4gi7e8t0Ilgp8jgi0"
+          target="_blank"
+          rel="noreferrer"
+        >
           resume
         </a>
       </div>

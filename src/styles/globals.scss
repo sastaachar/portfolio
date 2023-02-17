@@ -5,7 +5,7 @@
   --primary-font: #faf8ff;
   --primary-highlight: #8685ef;
   --primary-highlight-opposite: #00a97f;
-  --shadow-color: rgba(255, 255, 255, 0.6);
+  --shadow-color: rgba(255, 255, 255, 0.5);
   --transparentBg: #1a1a1abb;
   --primary-tint: #d3d8e4;
   // constant
@@ -26,7 +26,17 @@ div {
   transition-duration: 0.2s;
   transition-timing-function: ease-out;
 }
-
+@keyframes glow {
+  0% {
+    box-shadow: 0px 0px 16px 2px var(--shadow-color);
+  }
+  100% {
+    box-shadow: 0px 0px 23px 4px var(--shadow-color);
+  }
+  // 100% {
+  //   box-shadow: -1px 1px 16px 2px var(--shadow-color);
+  // }
+}
 .theme-button {
   width: 45px;
   height: 45px;
@@ -43,6 +53,15 @@ div {
   box-shadow: -1px 1px 16px 2px var(--shadow-color);
 
   z-index: 4;
+
+  animation: glow 0.65s alternate infinite;
+
+  cursor: pointer;
+
+  &:hover {
+    width: 55px;
+    height: 55px;
+  }
 }
 
 .theme-button:active {

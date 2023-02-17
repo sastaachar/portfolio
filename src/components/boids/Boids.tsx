@@ -1,13 +1,8 @@
-import {
-  getRandomVector3,
-  getUnprojectedCords,
-  UtilsRange,
-} from "@/utils/vectorUtils";
-import { Text } from "@react-three/drei";
+import { getRandomVector3 } from "@/utils/vectorUtils";
 import { useFrame, useThree } from "@react-three/fiber";
-import { FC, MutableRefObject, RefObject, useEffect, useRef } from "react";
+import { useRef } from "react";
 import * as THREE from "three";
-import { Vector2, Vector3 } from "three";
+import { Vector3 } from "three";
 import Boid, { BoidProperties } from "./Boid";
 
 const useWidthHeight = (dist: number) => {

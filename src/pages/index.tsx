@@ -17,6 +17,11 @@ export default function Home() {
     null
   ) as MutableRefObject<HTMLDivElement>;
 
+  useEffect(() => {
+    const useLight = Math.floor(Math.random() * 100) % 2;
+    setTheme(useLight ? "light" : "dark");
+  }, []);
+
   return (
     <>
       <Head>
