@@ -146,7 +146,7 @@ const AboutSection: SectionFC<{ handleScrollTo: HandleScrollTo }> = ({
               <span>{getFormattedDate(item.startDate)}</span>
               <span>-</span>
               <span>
-                {item.endDate ? getFormattedDate(item.endDate) : "Present"}
+                {item.endDate ? getFormattedDate(item.endDate) : "present"}
               </span>
             </div>
             <div className={styles.desc}>{item.desc}</div>

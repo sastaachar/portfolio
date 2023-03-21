@@ -33,6 +33,13 @@ export const projectData: Project[] = [
 
 export const jobData: Job[] = [
   {
+    company: "ThoughtSpot",
+    title: "Software Engineer",
+    desc: "Currently working on cool frontend stuff.",
+    startDate: { month: "march", year: 2023 },
+    present: true,
+  },
+  {
     company: "Amazon",
     title: "SDE",
     desc: "Developed Micro services for modeling and transformation of big data using spark and scala.",
